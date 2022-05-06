@@ -56,6 +56,8 @@ else()
 	endif()
 endif()
 
+check_c_compiler_flag(-g HAS_G)
+check_c_compiler_flag(-lefence HAS_LEFENCE)
 check_c_compiler_flag(-Werror HAS_WERROR)
 check_c_compiler_flag(-Wall HAS_WALL)
 check_c_compiler_flag(-Wextra HAS_WEXTRA)
@@ -68,6 +70,15 @@ check_c_compiler_flag(-Wno-unused-command-line-argument HAS_NOUNUSEDARG)
 check_c_compiler_flag(-pie HAS_ARG_PIE)
 check_c_compiler_flag(-nopie HAS_ARG_NOPIE)
 check_c_compiler_flag(-no-pie HAS_ARG_NO_PIE)
+
+
+if(HAS_G)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
+endif()
+
+if(HAS_LEFENCE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lefence")
+endif()
 
 if(HAS_WERROR AND TREAT_WARNINGS_AS_ERRORS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
