@@ -675,17 +675,18 @@ intercept_routine(struct context *context)
 		 * the clone_child_intercept_routine instead, executing
 		 * it on the new child threads stack, then returns to libc.
 		 */
-		if (desc.nr == SYS_clone && desc.args[1] != 0)
-			return (struct wrapper_ret){
-				.rax = context->rax, .rdx = 2 };
-		else
-			result = syscall_no_intercept(desc.nr,
-					desc.args[0],
-					desc.args[1],
-					desc.args[2],
-					desc.args[3],
-					desc.args[4],
-					desc.args[5]);
+		if ((desc.nr == SYS_clone || desc.nr == SYS_clone3)) {
+			if (desc.args[1] != 0)
+				return (struct wrapper_ret){
+					.rax = context->rax, .rdx = 2 };
+		}
+		result = syscall_no_intercept(desc.nr,
+				desc.args[0],
+				desc.args[1],
+				desc.args[2],
+				desc.args[3],
+				desc.args[4],
+				desc.args[5]);
 	}
 
 	intercept_log_syscall(patch, &desc, KNOWN, result);
